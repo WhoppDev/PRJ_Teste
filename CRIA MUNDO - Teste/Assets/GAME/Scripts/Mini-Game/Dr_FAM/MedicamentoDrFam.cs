@@ -44,7 +44,13 @@ public class MedicamentoDrFam : MonoBehaviour
         }
 
         spriteRenderer.material.SetFloat("_RemovedSegment", 3.17f);
-        player.EmpilharObjeto(medicamento);
+
+        if(player.medicamentosEscolhido != null)
+            {
+            Destroy(player.medicamenoObj);
+            player.medicamentosEscolhido = null;
+            }
+        player.PegarObjeto(medicamento);
     }
 
     private void OnDrawGizmosSelected()

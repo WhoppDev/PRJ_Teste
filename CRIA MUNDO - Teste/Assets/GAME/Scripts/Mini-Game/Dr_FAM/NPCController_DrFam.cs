@@ -22,9 +22,11 @@ public class NPCController_DrFam : MonoBehaviour
     private Coroutine courotine;
     public int occupiedChairIndex = -1;
 
-    public MedicamentoDATA medicamentoEscolhido;
+    public MedicamentoDATA medicamentoDesejado;
     public PlayerDrFam_Controller player;
     public bool playerDeitado = false;
+    public bool playerSentado = false;
+
 
 
     void Start()
@@ -32,6 +34,41 @@ public class NPCController_DrFam : MonoBehaviour
         target = GameObject.FindGameObjectWithTag("target_DrFAM").transform;
         inicialPosition = transform.position;
     }
+
+    private void Update()
+    {
+        if (!playerSentado)
+        {
+            float distance = Vector3.Distance(this.transform.position, target.transform.position);
+            if (distance <= 10)
+            {
+                for (int i = 0; i < DrFam_CORE.instance.sitSpace.Length; i++)
+                {
+                    if (!DrFam_CORE.instance.chairOccupied[i])
+                    {
+                        DrFam_CORE.instance.chairOccupied[i] = true;
+
+                        agent.enabled = false;
+                        anim.SetBool("isSitting", true);
+                        agent.velocity = Vector3.zero;
+                        this.transform.rotation = Quaternion.Euler(0f, DrFam_CORE.instance.sitSpace[i].transform.eulerAngles.y, 0f);
+
+                        this.transform.position = DrFam_CORE.instance.sitSpace[i].transform.position;
+
+                        occupiedChairIndex = i;
+
+                        break;
+                    }
+                    else if (i == DrFam_CORE.instance.sitSpace.Length - 1)
+                    {
+                        Destroy();
+                    }
+                }
+                playerSentado = true;
+            }
+        }
+    }
+
 
     private void FixedUpdate()
     {
@@ -44,6 +81,15 @@ public class NPCController_DrFam : MonoBehaviour
         {
             agent.SetDestination(target.position);
         }
+
+        
+    }
+
+    public void Destroy()
+    {
+        DrFam_CORE.instance.angryPoint++;
+        DrFam_CORE.instance.AtualizarHud();
+        Destroy(this.gameObject);
     }
 
     void SeeThePlayer()
@@ -82,7 +128,6 @@ public class NPCController_DrFam : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("Não foi possível encontrar um ponto válido no NavMesh. Retornando a posição original.");
             return position;
         }
     }
@@ -96,21 +141,10 @@ public class NPCController_DrFam : MonoBehaviour
     private IEnumerator StartTimer()
     {
         float elapsedTime = 0f;
-        int foundIndex = -1;
 
         if (playerDeitado)
         {
-            for (int i = 0; i < player.medicamentosEmpilhados.Count; i++)
-            {
-                MedicamentoDATA medicamento = player.medicamentosEmpilhados[i];
-                if (medicamento == medicamentoEscolhido)
-                {
-                    foundIndex = i;
-                    break;
-                }
-            }
-
-            if (foundIndex != -1)
+            if(player.medicamentosEscolhido == medicamentoDesejado)
             {
                 while (elapsedTime < transitionDuration)
                 {
@@ -126,16 +160,13 @@ public class NPCController_DrFam : MonoBehaviour
                 this.agent.velocity = Vector3.zero;
                 happy.Play();
 
-                this.transform.rotation = Quaternion.Euler(0f, DrFam_CORE.instance.camasDisponiveis[foundIndex].transform.eulerAngles.y, 0f);
-
                 agent.SetDestination(inicialPosition);
 
-                player.medicamentosEmpilhados.RemoveAt(foundIndex);
-
-                GameObject medicamentoObj = medicamentoEscolhido.medicamentoObj;
-                medicamentoEscolhido.medicamentoObj = null;
-
-                Destroy(medicamentoObj);
+                Destroy(player.medicamenoObj);
+                LiberarCama();
+                DrFam_CORE.instance.happyPoint++;
+                DrFam_CORE.instance.AtualizarHud();
+                player.medicamentosEscolhido = null;
             }
         }
         else
@@ -153,44 +184,53 @@ public class NPCController_DrFam : MonoBehaviour
     }
 
 
+
     void DeitarNaCama()
+    {
+        for (int i = 0; i < DrFam_CORE.instance.camasDisponiveis.Length; i++)
         {
-            for (int i = 0; i < DrFam_CORE.instance.camasDisponiveis.Length; i++)
+            if (!DrFam_CORE.instance.camasOcupadas[i])
             {
-                if (!DrFam_CORE.instance.camasOcupadas[i])
+                DrFam_CORE.instance.camasOcupadas[i] = true;
+
+                this.agent.enabled = false;
+                this.anim.SetBool("isSitting", false);
+                this.anim.SetBool("isLaying", true);
+                this.agent.velocity = Vector3.zero;
+                this.transform.rotation = Quaternion.Euler(0f, DrFam_CORE.instance.camasDisponiveis[i].transform.eulerAngles.y, 0f);
+
+                this.transform.position = DrFam_CORE.instance.camasDisponiveis[i].transform.position;
+                playerDeitado = true;
+                SelectMedicine();
+
+                if (occupiedChairIndex != -1)
                 {
-                    DrFam_CORE.instance.camasOcupadas[i] = true;
-
-                    this.agent.enabled = false;
-                    this.anim.SetBool("isSitting", false);
-                    this.anim.SetBool("isLaying", true);
-                    this.agent.velocity = Vector3.zero;
-                    this.transform.rotation = Quaternion.Euler(0f, DrFam_CORE.instance.camasDisponiveis[i].transform.eulerAngles.y, 0f);
-
-                    this.transform.position = DrFam_CORE.instance.camasDisponiveis[i].transform.position;
-                    playerDeitado = true;
-                    SelectMedicine();
-
-                    break;
+                    DrFam_CORE.instance.chairOccupied[occupiedChairIndex] = false;
+                    occupiedChairIndex = -1;
                 }
+
+                break;
             }
-
-            if (occupiedChairIndex != -1)
-            {
-                DrFam_CORE.instance.chairOccupied[occupiedChairIndex] = false;
-                occupiedChairIndex = -1;
-            }
-
-
         }
+    }
 
-        void SelectMedicine()
+
+    public void LiberarCama()
+    {
+        for (int i = 0; i < DrFam_CORE.instance.camasDisponiveis.Length; i++)
+        {
+            DrFam_CORE.instance.camasOcupadas[i] = false;
+            break;
+        }
+    }
+
+    void SelectMedicine()
         {
             int randomMedicine = Random.Range(0, medicamentos.Length);
             medicamentoSprite.sprite = medicamentos[randomMedicine].medicamentoImg;
-            if (medicamentoEscolhido == null)
+            if (medicamentoDesejado == null)
             {
-                medicamentoEscolhido = medicamentos[randomMedicine];
+                medicamentoDesejado = medicamentos[randomMedicine];
             }
         }
 }

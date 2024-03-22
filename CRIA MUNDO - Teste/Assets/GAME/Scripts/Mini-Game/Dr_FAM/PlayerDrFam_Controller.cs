@@ -4,20 +4,17 @@ using UnityEngine;
 
 public class PlayerDrFam_Controller : MonoBehaviour
 {
-    public Transform spawnPointMedicamento; 
-    public int AlturaMaxima = 5; 
-    public float distanciaMedicamento = 1.0f; 
+    public Transform spawnPointMedicamento;
 
-    public List<MedicamentoDATA> medicamentosEmpilhados = new List<MedicamentoDATA>();
+    public MedicamentoDATA medicamentosEscolhido;
+    public GameObject medicamenoObj;
 
-    public void EmpilharObjeto(MedicamentoDATA medicamentoSelecionado)
+
+    public void PegarObjeto(MedicamentoDATA medicamentoSelecionado)
     {
-        if (medicamentosEmpilhados.Count < 5) 
-        {
-            Vector3 spawnPosition = spawnPointMedicamento.position + Vector3.up * medicamentosEmpilhados.Count * distanciaMedicamento;
-            GameObject newObject = Instantiate(medicamentoSelecionado.medicamentoObj, spawnPosition, Quaternion.identity);
-            newObject.transform.parent = spawnPointMedicamento;
-            medicamentosEmpilhados.Add(medicamentoSelecionado);
-        }
+        GameObject newObject = Instantiate(medicamentoSelecionado.medicamentoObj, spawnPointMedicamento.position, Quaternion.identity);
+        newObject.transform.parent = spawnPointMedicamento;
+        medicamenoObj = newObject;
+        medicamentosEscolhido = medicamentoSelecionado;
     }
 }

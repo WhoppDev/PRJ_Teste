@@ -228,6 +228,20 @@
         {
             "m_OutputSlot": {
                 "m_Node": {
+                    "m_Id": "3507a1efa4ea4c588821b6fb1f14aebc"
+                },
+                "m_SlotId": 2
+            },
+            "m_InputSlot": {
+                "m_Node": {
+                    "m_Id": "be540b0fe24241d09d026f0b15ba35a7"
+                },
+                "m_SlotId": 0
+            }
+        },
+        {
+            "m_OutputSlot": {
+                "m_Node": {
                     "m_Id": "39c76eb143a644c7a763ba3c425f4fe8"
                 },
                 "m_SlotId": 2
@@ -445,20 +459,6 @@
             "m_InputSlot": {
                 "m_Node": {
                     "m_Id": "3507a1efa4ea4c588821b6fb1f14aebc"
-                },
-                "m_SlotId": 0
-            }
-        },
-        {
-            "m_OutputSlot": {
-                "m_Node": {
-                    "m_Id": "d1d8222aabc046208fdc18308e6cc557"
-                },
-                "m_SlotId": 3
-            },
-            "m_InputSlot": {
-                "m_Node": {
-                    "m_Id": "be540b0fe24241d09d026f0b15ba35a7"
                 },
                 "m_SlotId": 0
             }
@@ -849,7 +849,7 @@
     "isMainTexture": false,
     "useTilingAndOffset": false,
     "m_Modifiable": true,
-    "m_DefaultType": 0
+    "m_DefaultType": 2
 }
 
 {
@@ -1310,10 +1310,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -416.6667175292969,
-            "y": 199.9999237060547,
-            "width": 209.33338928222657,
-            "height": 304.00006103515627
+            "x": -397.9999694824219,
+            "y": 288.0,
+            "width": 209.3333282470703,
+            "height": 304.0
         }
     },
     "m_Slots": [
@@ -2243,9 +2243,9 @@
     "hlslDeclarationOverride": 0,
     "m_Hidden": false,
     "m_Value": {
-        "r": 0.8584905862808228,
-        "g": 0.021597178652882577,
-        "b": 0.021597178652882577,
+        "r": 0.08517256379127503,
+        "g": 0.9339622855186462,
+        "b": 0.16224777698516847,
         "a": 0.0
     },
     "isMainColor": false,

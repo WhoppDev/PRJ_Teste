@@ -2014,7 +2014,7 @@ GameObject:
   - component: {fileID: 5123312697780857727}
   - component: {fileID: 1349908990563012839}
   - component: {fileID: 7926517246817703723}
-  - component: {fileID: 7702303039079219640}
+  - component: {fileID: 5963728620654233320}
   m_Layer: 7
   m_Name: -= Main Camera
   m_TagString: MainCamera
@@ -2031,7 +2031,7 @@ Transform:
   m_GameObject: {fileID: 500064610313059495}
   serializedVersion: 2
   m_LocalRotation: {x: 0.018325422, y: 0.89251727, z: 0.036413506, w: -0.44916728}
-  m_LocalPosition: {x: 6.268683, y: 5.8559923, z: -0.48393488}
+  m_LocalPosition: {x: -1363.0114, y: -71.62149, z: -1684.7834}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2122,7 +2122,7 @@ MonoBehaviour:
   m_CameraActivatedEvent:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &7702303039079219640
+--- !u!114 &5963728620654233320
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2145,11 +2145,11 @@ MonoBehaviour:
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 0
-  m_Antialiasing: 0
-  m_AntialiasingQuality: 2
-  m_StopNaN: 0
-  m_Dithering: 0
+  m_RenderPostProcessing: 1
+  m_Antialiasing: 2
+  m_AntialiasingQuality: 1
+  m_StopNaN: 1
+  m_Dithering: 1
   m_ClearDepth: 1
   m_AllowXRRendering: 1
   m_AllowHDROutput: 1
@@ -33548,6 +33548,7 @@ MonoBehaviour:
   spawnPointMedicamento: {fileID: 3646580586663710579}
   AlturaMaxima: 5
   distanciaMedicamento: 1
+  medicamentosEmpilhados: []
 --- !u!114 &4220703142294151726
 MonoBehaviour:
   m_ObjectHideFlags: 0
