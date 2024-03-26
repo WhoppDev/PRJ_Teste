@@ -7,17 +7,21 @@ using UnityEngine.UI;
 
 public class CountPlayerToStart : MonoBehaviourPunCallbacks
 {
+    [Header("Configuração do Range")]
+    public float rangeMiniGame; //Tamanho do Range do MiniGame
+    public LayerMask playerLayer; //Mascara em que o player está
 
+    [Header("Configuração do MiniGame")]
     public int playerToStart; //Quantidade de jogadores necessária para iniciar o minigame
     public int currentplayer; //Quantidade de jogadores no trigger
 
     public bool onlineMinigame = false; //Se o minigame é online ou local
+    public MiniGameDATA minigame; //DATA do minigame escolhido
 
-    public string minigameName; //Nome do minigame
-    public Sprite minigameIcon; //Icone do minigame
-
-    [SerializeField] private Image icon; //HUD do icone do minigame
+    [Header("Infos do MiniGame")]
+    public Image icon; //HUD do icone do minigame
     public TextMeshProUGUI countPlayer; //HUD para a contagem de jogadores
+    public Collider[] hits; //PLayer dentro do Range
 
     public GameObject currentPlayer; //Jogador atual
     public GameObject sceneMiniGame; //Prefab do minigame
@@ -40,6 +44,20 @@ public class CountPlayerToStart : MonoBehaviourPunCallbacks
     {
         currentTime = countdownTime;
         minigameStarted = false;
+    }
+
+    private void FixedUpdate()
+    {
+        SeeThePlayer();
+    }
+
+    private void SeeThePlayer()
+    {
+        hits = Physics.OverlapSphere(transform.position, rangeMiniGame, playerLayer);
+        if (hits.Length >= playerToStart)
+        {
+            
+        }
     }
 
     void Update()
@@ -75,23 +93,6 @@ public class CountPlayerToStart : MonoBehaviourPunCallbacks
             currentTime = 0;
             StartMinigame();
             this.gameObject.SetActive(false);
-        }
-    }
-
-    void HideOtherPlayers()
-    {
-        foreach (GameObject player in GameObject.FindGameObjectsWithTag("Player"))
-        {
-            PhotonView pv = player.GetComponent<PhotonView>();
-            if (pv != null && !pv.IsMine)
-            {
-                Debug.Log("Escondendo " + player.name);
-                player.SetActive(false);
-            }
-            else
-            {
-                Debug.Log("Ignorando " + player.name + " porque é o jogador local ou não possui PhotonView");
-            }
         }
     }
 
@@ -145,4 +146,13 @@ public class CountPlayerToStart : MonoBehaviourPunCallbacks
         currentplayer--;
         currentTime = countdownTime;
     }
+
+    #region Ver o Gizmo
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position, rangeMiniGame);
+    }
+
+    #endregion // Função para vee o Gizmo
 }

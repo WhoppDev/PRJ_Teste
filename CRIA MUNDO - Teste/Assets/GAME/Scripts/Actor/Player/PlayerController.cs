@@ -85,18 +85,15 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     public void Jump()
     {
-        if (controller.isGrounded && isJumping || !canMove)
+        if (controller.isGrounded)
         {
             verticalVelocity = Mathf.Sqrt(jumpHeight * -2f * gravity);
-            animator.ResetTrigger("Jumping");
-            isJumping = false;
         }
 
-        if (!controller.isGrounded && verticalVelocity < 0)
-        {
-            isJumping = false;
-        }
+        animator.ResetTrigger("Jumping");
+        isJumping = false;
     }
+
 
 
     public void OnMove(InputAction.CallbackContext context)
@@ -125,12 +122,13 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     public void OnJump(InputAction.CallbackContext context)
     {
-        if (context.started && controller.isGrounded || !canMove || photonView.IsMine)
+        if (context.started && controller.isGrounded && !isPicking && canMove)
         {
             isJumping = true;
             animator.SetTrigger("Jumping");
         }
     }
+
 
     public void OnRun(InputAction.CallbackContext context)
     {
